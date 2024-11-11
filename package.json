@@ -4,13 +4,35 @@
   "description": "Cypress Test automation Framework",
   "main": "index.js",
   "scripts": {
-    "test:addToCart": "npx cypress run --spec cypress/e2e/tests/addToCartTest.cy.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run clean && npm run run-tests && npm run removeoldhtmlreport && npm run generate-report",
+    "clean": "rimraf cypress/reports",
+    "run-tests": "npm run cy:run:parallel || echo \"Tests failed, continuing...\"",
+    "cy:run:parallel": "cypress-parallel -s cy:run -t 4 -d 'cypress/e2e/**/*.cy.js' -r 'cypress-mochawesome-reporter' -o 'cypressParallel=true'",
+    "cy:run": "cypress run",
+    "removeoldhtmlreport": "rimraf cypress/reports/html/index.html",
+    "generate-report": "generate-mochawesome-report --set-exit-code",
+    "cy:run:firefox": "cypress run --browser firefox --headed",
+    "removeoldreportsd": "rimraf cypress/reports/html/*.jsons",
+    "merge-json": "mochawesome-merge 'cypress/reports/html/.jsons/*.json' -o mochawesome-report/cypress/reports/html/.jsons/mochawesome.json",
+    "merge-report": "marge cypress/reports/html/.jsons/mochawesome.json",
+    "merge-json-old": "mochawesome-merge 'cypress/reports/html/.jsons/*.json' -o cypress/reports/html/.jsons/mochawesome.json",
+    "merge-report-old": "marge cypress/reports/html/.jsons/mochawesome.json",
+    "testold": "npm run clean && npm run cy:run:parallel && npm run merge-json && npm run merge-report",
+    "firefox_headed": "npx cypress run --browser firefox --headed",
+    "merge-reports": "mochawesome-merge cypress/reports/html/.jsons/*.json -o combined-report.json && marge combined-report.json"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "cypress": "^13.15.0",
-    "cypress-mochawesome-reporter": "^3.8.2"
+    "cypress-mochawesome-reporter": "^3.8.2",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0"
+  },
+  "dependencies": {
+    "cypress-parallel": "^0.14.0",
+    "rimraf": "^6.0.1"
   }
 }

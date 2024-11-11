@@ -4,20 +4,19 @@ import testData from '../../fixtures/testData.json'
 
 
 describe(' test automation', () => {
-    before(() => {
+    beforeEach(() => {
         cy.login(testData.login.username, testData.login.password)
     })
 
-
-    it('Add To Cart flow', () => {
+    it('Add To Cart flow 1', () => {
         homePageObj.searchProduct(testData.product.productName)
         homePageObj.addToCart()
         homePageObj.verifySucessMessage().should('contain', testData.message.successMessage).and('contain', testData.product.productName);
+    })
 
-
-
-
-
-
+    it('Add To Cart flow 2', () => {
+        homePageObj.searchProduct(testData.product.productName)
+        homePageObj.addToCart()
+        homePageObj.verifySucessMessage().should('contain', testData.message.successMessage).and('contain', testData.product.productName);
     })
 })
